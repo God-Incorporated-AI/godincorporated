@@ -3,7 +3,7 @@ Data models for God Incorporated API.
 """
 from pydantic import BaseModel, Field
 from typing import Optional, List
-from datetime import datetime
+from datetime import datetime, timezone
 from enum import Enum
 
 
@@ -28,7 +28,7 @@ class WisdomResponse(BaseModel):
     answer: str = Field(..., description="The wisdom or answer provided")
     confidence: float = Field(..., description="Confidence level of the response (0-1)", ge=0, le=1)
     sources: Optional[List[str]] = Field(default=None, description="Sources or references")
-    timestamp: datetime = Field(default_factory=datetime.utcnow)
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 
 class InquiryResponse(BaseModel):
@@ -53,7 +53,7 @@ class VoiceResponse(BaseModel):
 
 class ValueExchangeRequest(BaseModel):
     """Request model for value-for-value participation."""
-    amount: float = Field(..., description="Amount to contribute", gt=0)
+    amount: float = Field(..., description="Amount to contribute", gt=0, le=1000000)
     currency: str = Field(default="USD", description="Currency code")
     message: Optional[str] = Field(None, description="Optional message with contribution")
 
@@ -63,12 +63,12 @@ class ValueExchangeResponse(BaseModel):
     transaction_id: str = Field(..., description="Transaction identifier")
     status: str = Field(..., description="Transaction status")
     amount: float = Field(..., description="Amount exchanged")
-    timestamp: datetime = Field(default_factory=datetime.utcnow)
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 
 class HealthResponse(BaseModel):
     """Response model for health check."""
     status: str = Field(..., description="Service status")
     version: str = Field(..., description="API version")
-    timestamp: datetime = Field(default_factory=datetime.utcnow)
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     modules: dict = Field(default_factory=dict, description="Status of individual modules")

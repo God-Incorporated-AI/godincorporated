@@ -3,7 +3,7 @@ Inquiry Module - Handles question submission and processing.
 """
 import uuid
 from typing import Optional
-from datetime import datetime
+from datetime import datetime, timezone
 from app.models import InquiryRequest, InquiryResponse, InquiryType
 
 
@@ -31,7 +31,7 @@ class InquiryModule:
             "inquiry_type": inquiry.inquiry_type,
             "context": inquiry.context,
             "user_id": inquiry.user_id,
-            "timestamp": datetime.utcnow(),
+            "timestamp": datetime.now(timezone.utc),
             "status": "submitted"
         }
         return inquiry_id

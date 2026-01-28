@@ -1,9 +1,13 @@
 """
 Wisdom Module - Provides AI-powered responses using OpenAI.
 """
+import logging
 from typing import Optional, List
 from app.models import WisdomResponse, InquiryType
 from app.config import settings
+
+# Configure logging
+logger = logging.getLogger(__name__)
 
 
 class WisdomModule:
@@ -16,7 +20,8 @@ class WisdomModule:
             try:
                 import openai
                 self.client = openai.OpenAI(api_key=settings.openai_api_key)
-            except ImportError:
+            except (ImportError, Exception) as e:
+                logger.warning(f"OpenAI initialization failed: {e}")
                 self.openai_available = False
                 self.client = None
         else:
@@ -54,12 +59,12 @@ class WisdomModule:
                         {"role": "system", "content": system_prompt},
                         {"role": "user", "content": user_message}
                     ],
-                    temperature=0.7,
-                    max_tokens=1000
+                    temperature=0.7,  # Balance between creativity and consistency
+                    max_tokens=1000  # Reasonable limit for wisdom responses
                 )
                 
                 answer = response.choices[0].message.content
-                confidence = 0.85  # Could be calculated based on response
+                confidence = 0.85  # High confidence for AI-generated responses
                 
                 return WisdomResponse(
                     answer=answer,
@@ -67,7 +72,8 @@ class WisdomModule:
                     sources=["OpenAI GPT"]
                 )
             except Exception as e:
-                # Fallback to default response
+                # Log error and fallback to default response
+                logger.error(f"OpenAI API call failed: {e}")
                 return self._generate_fallback_response(question, inquiry_type)
         else:
             # Use fallback when OpenAI is not available
@@ -113,7 +119,7 @@ class WisdomModule:
         
         return WisdomResponse(
             answer=answer,
-            confidence=0.5,
+            confidence=0.5,  # Lower confidence for fallback responses
             sources=["Built-in responses"]
         )
     

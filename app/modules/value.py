@@ -3,7 +3,7 @@ Value-for-Value Module - Handles contributions and exchanges.
 """
 import uuid
 from typing import Optional
-from datetime import datetime
+from datetime import datetime, timezone
 from app.models import ValueExchangeRequest, ValueExchangeResponse
 from app.config import settings
 
@@ -42,7 +42,7 @@ class ValueModule:
             "currency": request.currency,
             "message": request.message,
             "status": status,
-            "timestamp": datetime.utcnow()
+            "timestamp": datetime.now(timezone.utc)
         }
         
         self.transactions[transaction_id] = transaction

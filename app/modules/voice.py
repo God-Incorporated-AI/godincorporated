@@ -24,7 +24,7 @@ class VoiceModule:
                 self.tts_engine.setProperty('rate', settings.voice_rate)
                 self.tts_engine.setProperty('volume', settings.voice_volume)
                 self.tts_available = True
-            except Exception:
+            except (ImportError, Exception):
                 self.tts_engine = None
                 self.tts_available = False
             
@@ -32,7 +32,7 @@ class VoiceModule:
                 import speech_recognition as sr
                 self.recognizer = sr.Recognizer()
                 self.stt_available = True
-            except Exception:
+            except (ImportError, Exception):
                 self.recognizer = None
                 self.stt_available = False
     
@@ -53,7 +53,7 @@ class VoiceModule:
             # In a real implementation, this would generate audio file
             # For now, return a placeholder
             return "audio_data_placeholder"
-        except Exception:
+        except (ImportError, Exception):
             return None
     
     async def speech_to_text(self, audio_data: bytes, language: str = "en-US") -> Optional[str]:
@@ -74,7 +74,7 @@ class VoiceModule:
             # In a real implementation, this would process audio
             # For now, return a placeholder
             return "transcribed_text_placeholder"
-        except Exception:
+        except (ImportError, Exception):
             return None
     
     async def process_voice_request(self, request: VoiceRequest, audio_data: Optional[bytes] = None) -> VoiceResponse:
