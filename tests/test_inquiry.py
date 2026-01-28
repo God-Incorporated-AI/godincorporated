@@ -30,7 +30,8 @@ def test_submit_inquiry_invalid(client):
             "inquiry_type": "general"
         }
     )
-    assert response.status_code == 400
+    # Pydantic validation returns 422 for invalid input
+    assert response.status_code == 422
 
 
 def test_get_inquiry_history(client):
