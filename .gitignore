@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.env
+.venv/
+venv/
+env/
+
+# Logs & runtime data
+*.log
+oracle_log.json
+scroll_data.json
+seekers.json
+visitors.json
+
+# Audio / uploads (runtime-generated)
+backend/audio/
+backend/scrolls_uploads/
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Temporary files
+*.tmp
+*.temp
